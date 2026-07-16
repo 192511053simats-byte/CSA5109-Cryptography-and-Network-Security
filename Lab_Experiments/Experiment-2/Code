@@ -1,1 +1,15 @@
+plain = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+cipher_alpha = input("Enter 26-letter Cipher Alphabet: ").upper()
 
+text = input("Enter Plain Text: ").upper()
+
+cipher = ""
+
+for ch in text:
+    if ch.isalpha():
+        index = plain.index(ch)
+        cipher += cipher_alpha[index]
+    else:
+        cipher += ch
+
+print("Encrypted Text:", cipher)
