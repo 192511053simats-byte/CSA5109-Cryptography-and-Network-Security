@@ -1,5 +1,3 @@
-# Playfair Cipher
-
 def generate_matrix(key):
     key = key.upper().replace("J", "I")
     matrix = []
