@@ -1,1 +1,22 @@
+# Keyword Monoalphabetic Cipher
+
+keyword = input("Enter Keyword: ").upper()
+
+plain = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+cipher = ""
+
+# Add keyword letters
+for ch in keyword:
+    if ch not in cipher:
+        cipher += ch
+
+# Add remaining letters
+for ch in plain:
+    if ch not in cipher:
+        cipher += ch
+
+print("Plain Alphabet : ", plain)
+print("Cipher Alphabet:", cipher)
+
+
 
