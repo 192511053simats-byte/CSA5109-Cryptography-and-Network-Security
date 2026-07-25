@@ -1,1 +1,19 @@
+# Simple Substitution Cipher Decryption
+
+plain = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+
+cipher = input("Enter 26-letter Cipher Alphabet: ").upper()
+
+text = input("Enter Cipher Text: ").upper()
+
+plaintext = ""
+
+for ch in text:
+    if ch.isalpha():
+        index = cipher.index(ch)
+        plaintext += plain[index]
+    else:
+        plaintext += ch
+
+print("Plain Text:", plaintext)
 
