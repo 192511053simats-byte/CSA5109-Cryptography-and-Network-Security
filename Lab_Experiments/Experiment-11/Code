@@ -1,0 +1,15 @@
+import math
+
+# Calculate total possible keys
+total_keys = math.factorial(25)
+
+# Calculate effectively unique keys
+effective_keys = total_keys // 25
+
+print("Total Possible Keys (25!):")
+print(total_keys)
+print("Approximate Power of 2: 2^84")
+
+print("\nEffectively Unique Keys:")
+print(effective_keys)
+print("Approximate Power of 2: 2^79")
