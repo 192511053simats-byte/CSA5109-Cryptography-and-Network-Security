@@ -1,0 +1,26 @@
+# Known Plaintext Attack on Hill Cipher
+
+print("Enter Plaintext Matrix (2 x 2):")
+P = []
+for i in range(2):
+    row = list(map(int, input().split()))
+    P.append(row)
+
+print("Enter Ciphertext Matrix (2 x 2):")
+C = []
+for i in range(2):
+    row = list(map(int, input().split()))
+    C.append(row)
+
+print("\nPlaintext Matrix:")
+for row in P:
+    print(row)
+
+print("\nCiphertext Matrix:")
+for row in C:
+    print(row)
+
+print("\nThe key matrix can be recovered using:")
+print("K = C × P⁻¹ (mod 26)")
+
+print("\nHill Cipher is vulnerable to a known plaintext attack.")
