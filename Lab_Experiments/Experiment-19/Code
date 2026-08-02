@@ -1,0 +1,17 @@
+# CBC Mode Encryption (Simple 3DES Concept)
+
+text = input("Enter Plain Text: ").upper()
+key = input("Enter Key: ").upper()
+iv = input("Enter Initialization Vector: ").upper()
+
+cipher = ""
+
+for i in range(len(text)):
+    p = ord(text[i])
+    k = ord(key[i % len(key)])
+    v = ord(iv[i % len(iv)])
+
+    c = (p ^ v) ^ k
+    cipher += chr(c)
+
+print("Cipher Text:", cipher)
