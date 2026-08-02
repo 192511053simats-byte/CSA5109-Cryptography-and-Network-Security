@@ -1,0 +1,27 @@
+# CBC Mode Encryption and Decryption
+
+plain = input("Enter Plain Text: ")
+key = int(input("Enter Key (0-255): "))
+iv = int(input("Enter IV (0-255): "))
+
+cipher = []
+prev = iv
+
+# Encryption
+for ch in plain:
+    c = (ord(ch) ^ prev) ^ key
+    cipher.append(c)
+    prev = c
+
+print("Cipher Text:", cipher)
+
+# Decryption
+text = ""
+prev = iv
+
+for c in cipher:
+    p = (c ^ key) ^ prev
+    text += chr(p)
+    prev = c
+
+print("Decrypted Text:", text)
