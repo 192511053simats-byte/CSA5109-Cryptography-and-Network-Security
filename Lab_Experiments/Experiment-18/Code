@@ -1,0 +1,21 @@
+# DES Subkey Generation
+
+key = input("Enter 56-bit Key: ")
+
+left = key[:28]
+right = key[28:]
+
+shift = [1, 1, 2, 2, 2, 2, 2, 2,
+         1, 2, 2, 2, 2, 2, 2, 1]
+
+print("\nGenerated Subkeys:")
+
+for i in range(16):
+    s = shift[i]
+
+    left = left[s:] + left[:s]
+    right = right[s:] + right[:s]
+
+    subkey = left + right
+
+    print("K" + str(i + 1) + ":", subkey)
