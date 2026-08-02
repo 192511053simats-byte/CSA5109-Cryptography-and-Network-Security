@@ -1,0 +1,13 @@
+# Padding in ECB, CBC and CFB Modes
+
+text = input("Enter Plain Text: ")
+block = int(input("Enter Block Size: "))
+
+pad = block - (len(text) % block)
+
+if pad == block:
+    pad = block
+
+text = text + "1" + "0" * (pad - 1)
+
+print("Padded Plain Text:", text)
