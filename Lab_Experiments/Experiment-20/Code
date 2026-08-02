@@ -1,0 +1,19 @@
+# Error Propagation in ECB and CBC
+
+blocks = input("Enter Plain Text Blocks (space separated): ").split()
+
+error = int(input("Enter Block Number with Error: "))
+
+print("\nECB Mode:")
+for i in range(len(blocks)):
+    if i + 1 == error:
+        print("P" + str(i + 1), "= Corrupted")
+    else:
+        print("P" + str(i + 1), "=", blocks[i])
+
+print("\nCBC Mode:")
+for i in range(len(blocks)):
+    if i + 1 == error or i + 1 == error + 1:
+        print("P" + str(i + 1), "= Corrupted")
+    else:
+        print("P" + str(i + 1), "=", blocks[i])
