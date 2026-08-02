@@ -1,0 +1,27 @@
+# Counter (CTR) Mode Encryption and Decryption
+
+plain = input("Enter Plain Text: ")
+key = int(input("Enter Key (0-255): "))
+counter = int(input("Enter Counter Value: "))
+
+cipher = []
+
+# Encryption
+ctr = counter
+for ch in plain:
+    c = ord(ch) ^ key ^ ctr
+    cipher.append(c)
+    ctr += 1
+
+print("Cipher Text:", cipher)
+
+# Decryption
+text = ""
+ctr = counter
+
+for c in cipher:
+    p = c ^ key ^ ctr
+    text += chr(p)
+    ctr += 1
+
+print("Decrypted Text:", text)
