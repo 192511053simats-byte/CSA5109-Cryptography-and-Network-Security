@@ -1,0 +1,23 @@
+# RSA Private Key Generation
+
+e = int(input("Enter Public Key (e): "))
+n = int(input("Enter Modulus (n): "))
+
+# Find p and q
+for i in range(2, n):
+    if n % i == 0:
+        p = i
+        q = n // i
+        break
+
+phi = (p - 1) * (q - 1)
+
+# Find d
+for d in range(1, phi):
+    if (e * d) % phi == 1:
+        break
+
+print("p =", p)
+print("q =", q)
+print("Phi =", phi)
+print("Private Key (d) =", d)
