@@ -1,0 +1,14 @@
+# RSA Encryption
+
+text = input("Enter Plain Text: ")
+e = int(input("Enter Public Key (e): "))
+n = int(input("Enter Modulus (n): "))
+
+cipher = []
+
+for ch in text:
+    c = pow(ord(ch), e, n)
+    cipher.append(c)
+
+print("Encrypted Message:")
+print(cipher)
