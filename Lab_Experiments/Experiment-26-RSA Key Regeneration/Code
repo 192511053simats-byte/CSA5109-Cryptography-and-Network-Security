@@ -1,0 +1,15 @@
+# RSA Key Generation
+
+p = int(input("Enter p: "))
+q = int(input("Enter q: "))
+e = int(input("Enter Public Key (e): "))
+
+n = p * q
+phi = (p - 1) * (q - 1)
+
+for d in range(1, phi):
+    if (e * d) % phi == 1:
+        break
+
+print("Public Key : (", e, ",", n, ")")
+print("Private Key:", d)
