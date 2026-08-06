@@ -1,0 +1,9 @@
+# SHA-3 Lane Calculation
+
+total = int(input("Enter Total Lanes: "))
+capacity = int(input("Enter Capacity Lanes: "))
+
+rate = total - capacity
+
+print("Rate Lanes:", rate)
+print("Capacity Lanes:", capacity)
