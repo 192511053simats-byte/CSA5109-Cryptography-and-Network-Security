@@ -1,0 +1,8 @@
+# CBC-MAC Generation
+
+message = int(input("Enter Message: "))
+key = int(input("Enter Key: "))
+
+mac = message ^ key
+
+print("CBC-MAC:", mac)
