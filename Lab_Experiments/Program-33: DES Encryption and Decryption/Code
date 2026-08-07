@@ -1,0 +1,21 @@
+from Crypto.Cipher import DES
+from Crypto.Util.Padding import pad, unpad
+
+# DES key must be exactly 8 bytes (64 bits)
+key = b'12345678'
+
+# Create DES cipher
+cipher = DES.new(key, DES.MODE_ECB)
+
+# Input plaintext
+plaintext = input("Enter plaintext: ")
+
+# Encrypt
+encrypted = cipher.encrypt(pad(plaintext.encode(), DES.block_size))
+print("Encrypted (Hex):", encrypted.hex())
+
+# Decrypt
+decipher = DES.new(key, DES.MODE_ECB)
+decrypted = unpad(decipher.decrypt(encrypted), DES.block_size)
+
+print("Decrypted Text:", decrypted.decode())
