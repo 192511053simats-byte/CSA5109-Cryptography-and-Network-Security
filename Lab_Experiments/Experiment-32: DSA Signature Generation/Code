@@ -1,0 +1,12 @@
+# DSA Signature Simulation
+
+import random
+
+message = input("Enter Message: ")
+
+k = random.randint(1, 100)
+
+signature = hash(message) + k
+
+print("Random k:", k)
+print("Signature:", signature)
