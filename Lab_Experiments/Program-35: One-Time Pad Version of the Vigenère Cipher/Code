@@ -1,0 +1,30 @@
+import random
+
+plaintext = input("Enter Plaintext: ").upper()
+
+key = []
+ciphertext = ""
+decrypted = ""
+
+for ch in plaintext:
+    if ch.isalpha():
+        k = random.randint(0, 25)
+        key.append(k)
+        c = chr(((ord(ch) - ord('A') + k) % 26) + ord('A'))
+        ciphertext += c
+    else:
+        ciphertext += ch
+
+print("\nRandom Key Stream:", key)
+print("Ciphertext:", ciphertext)
+
+j = 0
+for ch in ciphertext:
+    if ch.isalpha():
+        p = chr(((ord(ch) - ord('A') - key[j]) % 26) + ord('A'))
+        decrypted += p
+        j += 1
+    else:
+        decrypted += ch
+
+print("Decrypted Text:", decrypted)
