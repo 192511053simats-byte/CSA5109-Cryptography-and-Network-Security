@@ -1,0 +1,44 @@
+from Crypto.Cipher import DES
+from Crypto.Util.Padding import pad, unpad
+from Crypto.Random import get_random_bytes
+
+# DES key (8 bytes)
+key = b'12345678'
+
+# Plaintext
+plaintext = input("Enter plaintext: ").encode()
+
+# ---------------- ECB MODE ----------------
+ecb_cipher = DES.new(key, DES.MODE_ECB)
+ecb_encrypted = ecb_cipher.encrypt(pad(plaintext, DES.block_size))
+ecb_decrypted = unpad(ecb_cipher.decrypt(ecb_encrypted), DES.block_size)
+
+print("\n----- ECB MODE -----")
+print("Encrypted (Hex):", ecb_encrypted.hex())
+print("Decrypted:", ecb_decrypted.decode())
+
+# ---------------- CBC MODE ----------------
+iv = get_random_bytes(8)
+
+cbc_cipher = DES.new(key, DES.MODE_CBC, iv)
+cbc_encrypted = cbc_cipher.encrypt(pad(plaintext, DES.block_size))
+
+cbc_decipher = DES.new(key, DES.MODE_CBC, iv)
+cbc_decrypted = unpad(cbc_decipher.decrypt(cbc_encrypted), DES.block_size)
+
+print("\n----- CBC MODE -----")
+print("Encrypted (Hex):", cbc_encrypted.hex())
+print("Decrypted:", cbc_decrypted.decode())
+
+# ---------------- CFB MODE ----------------
+iv = get_random_bytes(8)
+
+cfb_cipher = DES.new(key, DES.MODE_CFB, iv)
+cfb_encrypted = cfb_cipher.encrypt(plaintext)
+
+cfb_decipher = DES.new(key, DES.MODE_CFB, iv)
+cfb_decrypted = cfb_decipher.decrypt(cfb_encrypted)
+
+print("\n----- CFB MODE -----")
+print("Encrypted (Hex):", cfb_encrypted.hex())
+print("Decrypted:", cfb_decrypted.decode())
