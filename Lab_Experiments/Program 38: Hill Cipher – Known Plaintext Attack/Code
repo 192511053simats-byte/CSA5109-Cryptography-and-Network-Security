@@ -1,0 +1,82 @@
+import numpy as np
+
+MOD = 26
+
+
+def mod_inverse(a):
+    return pow(int(a) % MOD, -1, MOD)
+
+
+def encrypt(plaintext, key):
+    plaintext = plaintext.upper().replace(" ", "")
+    result = ""
+
+    for i in range(0, len(plaintext), 2):
+        block = np.array([
+            [ord(plaintext[i]) - 65],
+            [ord(plaintext[i + 1]) - 65]
+        ])
+
+        cipher = np.dot(key, block) % MOD
+
+        result += chr(int(cipher[0][0]) + 65)
+        result += chr(int(cipher[1][0]) + 65)
+
+    return result
+
+
+def decrypt(ciphertext, key):
+    determinant = int(round(np.linalg.det(key))) % MOD
+    det_inverse = mod_inverse(determinant)
+
+    # Inverse of a 2x2 matrix modulo 26
+    inverse_key = np.array([
+        [key[1][1], -key[0][1]],
+        [-key[1][0], key[0][0]]
+    ])
+
+    inverse_key = (det_inverse * inverse_key) % MOD
+
+    return encrypt(ciphertext, inverse_key)
+
+
+# Known plaintext-ciphertext pair
+known_plaintext = input("Enter known plaintext (4 letters): ").upper()
+known_ciphertext = input("Enter corresponding ciphertext (4 letters): ").upper()
+
+# Convert text into matrices
+P = np.array([
+    [ord(known_plaintext[0]) - 65, ord(known_plaintext[2]) - 65],
+    [ord(known_plaintext[1]) - 65, ord(known_plaintext[3]) - 65]
+])
+
+C = np.array([
+    [ord(known_ciphertext[0]) - 65, ord(known_ciphertext[2]) - 65],
+    [ord(known_ciphertext[1]) - 65, ord(known_ciphertext[3]) - 65]
+])
+
+# Find inverse of plaintext matrix
+det = int(round(np.linalg.det(P))) % MOD
+
+if np.gcd(det, MOD) != 1:
+    print("Known plaintext matrix is not invertible modulo 26.")
+else:
+    det_inverse = mod_inverse(det)
+
+    P_inverse = np.array([
+        [P[1][1], -P[0][1]],
+        [-P[1][0], P[0][0]]
+    ])
+
+    P_inverse = (det_inverse * P_inverse) % MOD
+
+    # Recover Hill cipher key
+    key = np.dot(C, P_inverse) % MOD
+
+    print("\nRecovered Key Matrix:")
+    print(key)
+
+    ciphertext = input("\nEnter ciphertext to decrypt: ").upper()
+    plaintext = decrypt(ciphertext, key)
+
+    print("Recovered Plaintext:", plaintext)
