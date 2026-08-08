@@ -1,0 +1,57 @@
+from collections import Counter
+
+# English letter frequency order
+ENGLISH_FREQ = "ETAOINSHRDLCUMWFGYPBVKJXQZ"
+
+
+def decrypt(ciphertext, shift):
+    plaintext = ""
+
+    for ch in ciphertext.upper():
+        if ch.isalpha():
+            value = (ord(ch) - ord('A') - shift) % 26
+            plaintext += chr(value + ord('A'))
+        else:
+            plaintext += ch
+
+    return plaintext
+
+
+def frequency_attack(ciphertext, top_n):
+    counts = Counter(ch for ch in ciphertext.upper() if ch.isalpha())
+
+    # Most frequent ciphertext letter
+    most_common = counts.most_common()
+
+    candidates = []
+
+    for letter, _ in most_common:
+        # Assume the frequent letter represents E
+        shift = (ord(letter) - ord('E')) % 26
+
+        plaintext = decrypt(ciphertext, shift)
+
+        candidates.append((shift, plaintext))
+
+    # Add remaining shifts if necessary
+    used = {shift for shift, _ in candidates}
+
+    for shift in range(26):
+        if shift not in used:
+            candidates.append((shift, decrypt(ciphertext, shift)))
+
+    return candidates[:top_n]
+
+
+ciphertext = input("Enter ciphertext: ")
+top_n = int(input("Enter number of possible plaintexts: "))
+
+if top_n > 26:
+    top_n = 26
+
+results = frequency_attack(ciphertext, top_n)
+
+print("\nPossible Plaintexts:")
+
+for i, (shift, plaintext) in enumerate(results, 1):
+    print(f"{i}. Shift = {shift:2d} : {plaintext}")
