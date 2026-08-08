@@ -1,0 +1,48 @@
+from collections import Counter
+
+# English letter frequency order
+FREQUENCY = "ETAOINSHRDLCUMWFGYPBVKJXQZ"
+
+
+def frequency_attack(ciphertext, top_n):
+    letters = [ch for ch in ciphertext.upper() if ch.isalpha()]
+    counts = Counter(letters)
+
+    # Sort cipher letters by frequency
+    cipher_order = sorted(
+        counts,
+        key=lambda ch: counts[ch],
+        reverse=True
+    )
+
+    candidates = []
+
+    for shift in range(top_n):
+        mapping = {}
+
+        # Create a frequency-based substitution mapping
+        for i, ch in enumerate(cipher_order):
+            if i < 26:
+                mapping[ch] = FREQUENCY[(i + shift) % 26]
+
+        plaintext = ""
+
+        for ch in ciphertext.upper():
+            if ch.isalpha():
+                plaintext += mapping.get(ch, '?')
+            else:
+                plaintext += ch
+
+        candidates.append(plaintext)
+
+    return candidates
+
+
+ciphertext = input("Enter ciphertext: ")
+top_n = int(input("Enter number of possible plaintexts: "))
+
+results = frequency_attack(ciphertext, top_n)
+
+print("\nPossible Plaintexts:")
+for i, text in enumerate(results, 1):
+    print(f"{i}. {text}")
