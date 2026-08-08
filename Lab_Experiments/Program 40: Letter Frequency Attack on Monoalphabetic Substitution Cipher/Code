@@ -1,0 +1,83 @@
+from collections import Counter
+
+# Approximate English letter frequency
+ENGLISH_FREQ = "ETAOINSHRDLCUMWFGYPBVKJXQZ"
+
+# Common English words used for simple scoring
+COMMON_WORDS = {
+    "THE", "OF", "AND", "TO", "IN", "IS", "IT",
+    "YOU", "THAT", "HE", "WAS", "FOR", "ON",
+    "ARE", "AS", "WITH", "HIS", "THEY", "I"
+}
+
+
+def frequency_order(text):
+    counts = Counter(ch for ch in text.upper() if ch.isalpha())
+    return [ch for ch, _ in counts.most_common()]
+
+
+def create_mapping(cipher_order, shift):
+    mapping = {}
+
+    for i, cipher_char in enumerate(cipher_order):
+        if i < 26:
+            plain_char = ENGLISH_FREQ[(i + shift) % 26]
+            mapping[cipher_char] = plain_char
+
+    return mapping
+
+
+def decrypt(text, mapping):
+    result = ""
+
+    for ch in text.upper():
+        if ch.isalpha():
+            result += mapping.get(ch, '?')
+        else:
+            result += ch
+
+    return result
+
+
+def score_text(text):
+    words = text.split()
+    score = 0
+
+    for word in words:
+        if word in COMMON_WORDS:
+            score += 10
+
+    # Reward common English letter combinations
+    for pair in ["TH", "HE", "IN", "ER", "AN", "RE", "ON", "AT"]:
+        score += text.count(pair)
+
+    return score
+
+
+ciphertext = input("Enter ciphertext: ")
+top_n = int(input("Enter number of possible plaintexts: "))
+
+if top_n < 1:
+    print("Number of candidates must be positive.")
+else:
+    order = frequency_order(ciphertext)
+    candidates = []
+
+    # Generate possible mappings
+    for shift in range(26):
+        mapping = create_mapping(order, shift)
+        plaintext = decrypt(ciphertext, mapping)
+        score = score_text(plaintext)
+
+        candidates.append((score, plaintext))
+
+    # Sort by likelihood score
+    candidates.sort(reverse=True)
+
+    top_n = min(top_n, len(candidates))
+
+    print("\nPossible Plaintexts:")
+
+    for i in range(top_n):
+        score, plaintext = candidates[i]
+        print(f"{i + 1}. {plaintext}")
