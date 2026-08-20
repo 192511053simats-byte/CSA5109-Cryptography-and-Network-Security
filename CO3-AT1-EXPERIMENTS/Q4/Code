@@ -1,0 +1,49 @@
+import hmac
+import hashlib
+import time
+
+client = "Alice"
+server = "FileServer"
+
+server_key = b"server_secret"
+
+# Session key generated for the client
+session_key = b"session123"
+
+# Create ticket information
+ticket_data = (
+client + "|" +
+server + "|" +
+session_key.decode()
+)
+
+# Server creates a MAC for the ticket
+ticket_mac = hmac.new(
+server_key,
+ticket_data.encode(),
+hashlib.sha256
+).hexdigest()
+
+ticket = ticket_data + "|" + ticket_mac
+
+print("Ticket generated:")
+print(ticket)
+
+# Server receives the ticket
+parts = ticket.split("|")
+
+received_data = "|".join(parts[:3])
+received_mac = parts[3]
+
+expected_mac = hmac.new(
+server_key,
+received_data.encode(),
+hashlib.sha256
+).hexdigest()
+
+# Validate ticket
+if hmac.compare_digest(received_mac, expected_mac):
+ print("\nTicket verified")
+ print("Client authenticated:", parts[0])
+else:
+ print("\nInvalid ticket")
