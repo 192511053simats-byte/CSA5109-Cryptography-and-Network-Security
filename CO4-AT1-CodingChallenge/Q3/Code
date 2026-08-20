@@ -1,0 +1,80 @@
+class SecurityAssociationManager:
+
+    def __init__(self):
+        self.sa_database = {}
+
+    def create_sa(self, spi, source, destination,
+                  protocol, encryption, authentication):
+
+        if spi in self.sa_database:
+            print("SA already exists.")
+            return
+
+        self.sa_database[spi] = {
+            "SPI": spi,
+            "Source": source,
+            "Destination": destination,
+            "Protocol": protocol,
+            "Encryption": encryption,
+            "Authentication": authentication
+        }
+
+        print(f"SA with SPI {spi} created successfully.")
+
+    def lookup_sa(self, spi):
+
+        if spi in self.sa_database:
+            print("\nSecurity Association Found:")
+
+            for key, value in self.sa_database[spi].items():
+                print(f"{key}: {value}")
+
+        else:
+            print(f"\nSA with SPI {spi} not found.")
+
+    def delete_sa(self, spi):
+
+        if spi in self.sa_database:
+            del self.sa_database[spi]
+            print(f"\nSA with SPI {spi} deleted successfully.")
+
+        else:
+            print(f"\nSA with SPI {spi} does not exist.")
+
+
+# Create SA manager
+manager = SecurityAssociationManager()
+
+
+# Create Security Association 1
+manager.create_sa(
+    1001,
+    "192.168.1.10",
+    "192.168.1.20",
+    "ESP",
+    "AES-256-GCM",
+    "SHA-256"
+)
+
+
+# Create Security Association 2
+manager.create_sa(
+    1002,
+    "10.0.0.1",
+    "10.0.0.2",
+    "AH",
+    "None",
+    "HMAC-SHA256"
+)
+
+
+# Lookup operation
+manager.lookup_sa(1001)
+
+
+# Delete operation
+manager.delete_sa(1002)
+
+
+# Verify deletion
+manager.lookup_sa(1002)
