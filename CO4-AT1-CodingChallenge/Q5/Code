@@ -1,0 +1,133 @@
+import re
+
+
+def classify_email(sender, subject, body):
+
+    spam_score = 0
+    reasons = []
+
+    # Common spam keywords
+    spam_keywords = [
+        "free",
+        "winner",
+        "won",
+        "prize",
+        "claim",
+        "money",
+        "urgent",
+        "offer",
+        "congratulations"
+    ]
+
+    # Convert email content to lowercase
+    sender_lower = sender.lower()
+    subject_lower = subject.lower()
+    body_lower = body.lower()
+
+    # Check spam keywords in subject
+    for word in spam_keywords:
+        if word in subject_lower:
+            spam_score += 2
+            reasons.append(
+                f"Spam keyword in subject: {word}"
+            )
+
+    # Check spam keywords in body
+    for word in spam_keywords:
+        if word in body_lower:
+            spam_score += 1
+            reasons.append(
+                f"Spam keyword in body: {word}"
+            )
+
+    # Check suspicious URLs
+    urls = re.findall(
+        r'https?://[^\s]+',
+        body_lower
+    )
+
+    if len(urls) >= 2:
+        spam_score += 2
+        reasons.append("Multiple URLs detected")
+
+    # Check suspicious sender
+    if "fake" in sender_lower:
+        spam_score += 2
+        reasons.append("Suspicious sender address")
+
+    # Final classification
+    threshold = 5
+
+    if spam_score >= threshold:
+        classification = "SPAM"
+    else:
+        classification = "LEGITIMATE"
+
+    return classification, spam_score, reasons
+
+
+# --------------------------------------------------
+# Test Email 1
+# --------------------------------------------------
+
+sender = "offers@fakeoffer.com"
+
+subject = "Congratulations! You are a winner. Claim now!"
+
+body = """
+You have won a free prize.
+Click here to claim your money:
+http://fakeoffer.com
+http://claim-now.com
+"""
+
+result, score, reasons = classify_email(
+    sender,
+    subject,
+    body
+)
+
+print("EMAIL 1")
+print("Classification:", result)
+print("Spam Score:", score)
+
+print("Reasons:")
+
+for reason in reasons:
+    print("-", reason)
+
+
+# --------------------------------------------------
+# Test Email 2
+# --------------------------------------------------
+
+sender2 = "faculty@simats.ac.in"
+
+subject2 = "Internal Assessment Schedule"
+
+body2 = """
+Dear Student,
+The Internal Assessment will be conducted
+according to the schedule provided by the department.
+
+Regards,
+Department of CSE
+"""
+
+result2, score2, reasons2 = classify_email(
+    sender2,
+    subject2,
+    body2
+)
+
+print("\nEMAIL 2")
+print("Classification:", result2)
+print("Spam Score:", score2)
+
+print("Reasons:")
+
+if reasons2:
+    for reason in reasons2:
+        print("-", reason)
+else:
+    print("- No suspicious features detected")
