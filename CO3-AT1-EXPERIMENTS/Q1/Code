@@ -1,0 +1,28 @@
+import hashlib
+import time
+
+messages = [
+"Hello World",
+"Cryptography",
+"SIMATS Engineering",
+"Network Security"
+]
+
+for message in messages:
+
+ data = message.encode()
+
+start = time.perf_counter()
+md5_hash = hashlib.md5(data).hexdigest()
+md5_time = time.perf_counter() - start
+
+start = time.perf_counter()
+sha_hash = hashlib.sha256(data).hexdigest()
+sha_time = time.perf_counter() - start
+
+print("\nMessage:", message)
+print("MD5 :", md5_hash)
+print("SHA-256:", sha_hash)
+
+print("MD5 Time :", md5_time)
+print("SHA-256 Time:", sha_time)
