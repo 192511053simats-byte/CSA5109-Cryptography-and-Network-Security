@@ -1,0 +1,52 @@
+import hashlib
+
+# Small parameters for demonstration
+p = 23
+q = 11
+g = 4
+
+# Private key
+x = 3
+
+# Public key
+y = pow(g, x, p)
+
+message = "Cryptography Lab"
+
+# Random nonce
+k = 7
+
+# Commitment
+r = pow(g, k, p)
+
+# Challenge
+h = int(
+hashlib.sha256(
+(message + str(r)).encode()
+
+).hexdigest(),
+16
+) % q
+
+# Signature
+s = (k + x * h) % q
+
+print("Message:", message)
+print("Public key:", y)
+print("Signature: (", r, ",", s, ")")
+
+# Verification
+h2 = int(
+hashlib.sha256(
+(message + str(r)).encode()
+).hexdigest(),
+16
+) % q
+
+left = pow(g, s, p)
+right = (r * pow(y, h2, p)) % p
+
+if left == right:
+ print("Signature Verified")
+else:
+ print("Signature Invalid")
