@@ -1,0 +1,31 @@
+import hashlib
+import hmac
+
+message = b"Transfer Rs.1000"
+key = b"secretkey"
+
+# Simple SHA-256 hash
+simple_hash = hashlib.sha256(message).hexdigest()
+
+# HMAC-SHA256
+mac = hmac.new(
+key,
+message,
+hashlib.sha256
+).hexdigest()
+
+print("Message :", message.decode())
+print("SHA-256 :", simple_hash)
+print("HMAC-SHA256 :", mac)
+
+# Verify HMAC
+new_mac = hmac.new(
+key,
+message,
+hashlib.sha256
+).hexdigest()
+
+if hmac.compare_digest(mac, new_mac):
+ print("HMAC Verified")
+else:
+ print("HMAC Verification Failed")
