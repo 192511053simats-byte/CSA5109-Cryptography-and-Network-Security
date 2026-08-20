@@ -1,0 +1,59 @@
+import hmac
+import hashlib
+
+
+def generate_mac(packet, key):
+    """
+    Generate HMAC-SHA256 for the given IP packet.
+    """
+    return hmac.new(
+        key.encode(),
+        packet.encode(),
+        hashlib.sha256
+    ).hexdigest()
+
+
+def verify_mac(packet, received_mac, key):
+    """
+    Verify the MAC of the received IP packet.
+    """
+    calculated_mac = generate_mac(packet, key)
+
+    return hmac.compare_digest(calculated_mac, received_mac)
+
+
+# Secret key shared between sender and receiver
+key = "IPSecSecretKey"
+
+# Original IP packet
+packet = "SRC=192.168.1.10|DST=192.168.1.20|DATA=Hello IPSec"
+
+# Sender generates AH authentication data
+mac = generate_mac(packet, key)
+
+print("Original IP Packet:")
+print(packet)
+
+print("\nGenerated AH MAC:")
+print(mac)
+
+# Receiver verifies the packet
+if verify_mac(packet, mac, key):
+    print("\nVerification Result: SUCCESS")
+    print("Packet integrity and authentication verified.")
+else:
+    print("\nVerification Result: FAILED")
+    print("Packet authentication failed.")
+
+# Simulating packet modification
+modified_packet = "SRC=192.168.1.10|DST=192.168.1.20|DATA=Modified"
+
+print("\nModified IP Packet:")
+print(modified_packet)
+
+# Verify modified packet using the original MAC
+if verify_mac(modified_packet, mac, key):
+    print("Verification Result: SUCCESS")
+else:
+    print("Verification Result: FAILED")
+    print("Packet has been modified or authentication failed.")
