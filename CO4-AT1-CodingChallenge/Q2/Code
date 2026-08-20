@@ -1,62 +1,40 @@
-import hmac
-import hashlib
+import os
+from cryptography.hazmat.primitives.ciphers.aead import AESGCM
 
 
-def generate_mac(packet, key):
-    """
-    Generate HMAC-SHA256 for the given IP packet.
-    """
-    return hmac.new(
-        key.encode(),
-        packet.encode(),
-        hashlib.sha256
-    ).hexdigest()
+# Generate a 256-bit AES key
+key = AESGCM.generate_key(bit_length=256)
+
+# Create AES-GCM object
+aes = AESGCM(key)
+
+# Original IP packet payload
+payload = b"Sensitive IPSec ESP Payload"
+
+# Generate a random 96-bit nonce
+nonce = os.urandom(12)
+
+print("Original Payload:")
+print(payload.decode())
 
 
-def verify_mac(packet, received_mac, key):
-    """
-    Verify the MAC of the received IP packet.
-    """
-    calculated_mac = generate_mac(packet, key)
+# ESP Encryption
+ciphertext = aes.encrypt(nonce, payload, None)
 
-    return hmac.compare_digest(calculated_mac, received_mac)
+print("\nEncrypted ESP Payload:")
+print(ciphertext.hex())
 
 
-# Secret key shared between sender and receiver
-key = "IPSecSecretKey"
+# ESP Decryption
+try:
+    decrypted_payload = aes.decrypt(nonce, ciphertext, None)
 
-# Original IP packet
-packet = "SRC=192.168.1.10|DST=192.168.1.20|DATA=Hello IPSec"
+    print("\nDecrypted Payload:")
+    print(decrypted_payload.decode())
 
-# Sender generates AH authentication data
-mac = generate_mac(packet, key)
+    print("\nESP Result:")
+    print("Encryption and decryption successful.")
 
-print("Original IP Packet:")
-print(packet)
-
-print("\nGenerated AH MAC:")
-print(mac)
-
-
-# Receiver verifies the original packet
-if verify_mac(packet, mac, key):
-    print("\nVerification Result: SUCCESS")
-    print("Packet integrity and authentication verified.")
-else:
-    print("\nVerification Result: FAILED")
-    print("Packet authentication failed.")
-
-
-# Simulating packet modification
-modified_packet = "SRC=192.168.1.10|DST=192.168.1.20|DATA=Modified"
-
-print("\nModified IP Packet:")
-print(modified_packet)
-
-
-# Receiver verifies the modified packet
-if verify_mac(modified_packet, mac, key):
-    print("Verification Result: SUCCESS")
-else:
-    print("Verification Result: FAILED")
-    print("Packet has been modified or authentication failed.")
+except Exception:
+    print("\nESP Result:")
+    print("Decryption failed. Data may have been modified.")
